@@ -1,0 +1,182 @@
+[ 
+  {
+    "id": 1,
+    "name": "Harry Potter",
+    "description": "Harry Potter，被選者之一，以他的蛇語能力、守護神（鹿）和逐影术而著稱。作為成為鳳凰會的領袖，他充滿勇氣和毅力，是黑魔王的堅定敵人。",
+    "team": "成為鳳凰會",
+    "health": 85,
+    "min_attack": 5,
+    "max_attack": 20
+  },
+  {
+    "id": 2,
+    "name": "Hermione Granger",
+    "description": "Hermione Granger是成為鳳凰會中的智者，以她卓越的智慧和魔法技能而聞名。她在戰鬥中的精湛表現和對法術的深刻理解使她成為一位強大的對手，同時她擁有時間器，讓她在戰鬥中更具優勢。",
+    "team": "成為鳳凰會",
+    "health": 90,
+    "min_attack": 5,
+    "max_attack": 20
+  },
+  {
+    "id": 3,
+    "name": "Ron Weasley",
+    "description": "Ron Weasley是成為鳳凰會中的忠實朋友和戰士。儘管他有時候有些害怕，但在關鍵時刻總是能夠挺身而出，用他的智慧和勇氣支持著哈利和 Hermione。",
+    "team": "成為鳳凰會",
+    "health": 80,
+    "min_attack": 6,
+    "max_attack": 18
+  },
+  {
+    "id": 4,
+    "name": "Dumbledore",
+    "description": "Albus Dumbledore是霍格華茲的校長，以他的深邃智慧和對魔法的卓越掌握而聞名。作為一位賢明的領袖，他致力於對抗黑魔王並保護魔法世界的和平。",
+    "team": "成為鳳凰會",
+    "health": 95,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 5,
+    "name": "Hagrid",
+    "description": "Rubeus Hagrid是霍格華茲的魔獸學教授，以他對巨人和奇幻生物的熱愛而聞名。儘管他外表嚇人，但內心是一個善良且堅定的朋友，經常在困難時刻幫助成為鳳凰會。",
+    "team": "成為鳳凰會",
+    "health": 88,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 6,
+    "name": "Sirius Black",
+    "description": "Sirius Black是一位被誤解的巫師，曾是哈利的教父。他擁有豐富的魔法知識和對家族的愛，為了保護哈利而犧牲自己。",
+    "team": "成為鳳凰會",
+    "health": 85,
+    "min_attack": 9,
+    "max_attack": 24
+  },
+  {
+    "id": 7,
+    "name": "Luna Lovegood",
+    "description": "Luna Lovegood是一位古靈精怪的女巫，以她對奇幻生物和魔法事物的著迷而聞名。她的獨特視角和樂觀性格使她成為成為鳳凰會中的一員。",
+    "team": "成為鳳凰會",
+    "health": 82,
+    "min_attack": 6,
+    "max_attack": 18
+  },
+  {
+    "id": 8,
+    "name": "Ginny Weasley",
+    "description": "Ginny Weasley是個性堅強的女巫，擁有卓越的飛行和魔法技能。她在魔法世界中展現出色的戰鬥才華，是哈利的摯愛。",
+    "team": "成為鳳凰會",
+    "health": 86,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 9,
+    "name": "Neville Longbottom",
+    "description": "Neville Longbottom是一位勇敢的巫師，以他的毅力和堅持不懈的精神而聞名。儘管起初看似害羞，但在戰鬥中展現出強大的魔法能力。",
+    "team": "成為鳳凰會",
+    "health": 84,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 10,
+    "name": "Remus Lupin",
+    "description": "Remus Lupin是一位狼人，同時也是一位優秀的魔法師。儘管他面臨著月圓時的變身困擾，但在人性和智慧上都展現出色。",
+    "team": "成為鳳凰會",
+    "health": 88,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 11,
+    "name": "Lord Voldemort",
+    "description": "Lord Voldemort，黑魔王，是哈利波特世界中最邪惡的巫師之一。他以其對黑魔法的精通和對統治的渴望而聞名。食死徒們是他的忠實追隨者，為實現黑魔王的目標而效命。",
+    "team": "成為食死徒",
+    "health": 95,
+    "min_attack": 10,
+    "max_attack": 25
+  },
+  {
+    "id": 12,
+    "name": "Bellatrix Lestrange",
+    "description": "Bellatrix Lestrange是食死徒中最狂熱和危險的一員，以她對黑魔王的狂熱忠誠和殘忍的性格而聞名。她在戰鬥中展現出無情和精湛的黑魔法技能。",
+    "team": "成為食死徒",
+    "health": 92,
+    "min_attack": 9,
+    "max_attack": 23
+  },
+  {
+    "id": 13,
+    "name": "Lucius Malfoy",
+    "description": "Lucius Malfoy是一位富有且有權勢的巫師，是食死徒中的高階成員。以他對黑魔王的忠誠和對純血巫師的偏愛而聞名。",
+    "team": "成為食死徒",
+    "health": 90,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 14,
+    "name": "Severus Snape",
+    "description": "Severus Snape是一位神秘而複雜的巫師，曾是食死徒，但後來背叛黑魔王。以他的魔法技巧和矛盾的性格而聞名。",
+    "team": "成為食死徒",
+    "health": 88,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 15,
+    "name": "Draco Malfoy",
+    "description": "Draco Malfoy是一位風雅的巫師，來自純血巫師家族。雖然曾受黑魔王的影響，但後來放棄黑暗的道路。",
+    "team": "成為食死徒",
+    "health": 85,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 16,
+    "name": "Narcissa Malfoy",
+    "description": "Narcissa Malfoy是Lucius Malfoy的妻子，同樣出身純血巫師家族。儘管她支持黑魔王，但她的首要關注是保護家族。",
+    "team": "成為食死徒",
+    "health": 86,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 17,
+    "name": "Alecto Carrow",
+    "description": "Alecto Carrow是食死徒中的一員，以她對黑魔法的崇拜和對魔法禁忌的熱愛而聞名。她在戰鬥中使用殘酷的咒語。",
+    "team": "成為食死徒",
+    "health": 84,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 18,
+    "name": "Antonin Dolohov",
+    "description": "Antonin Dolohov是一位強大而殘忍的食死徒，以他的黑魔法技能和對魔法戰鬥的激情而聞名。",
+    "team": "成為食死徒",
+    "health": 89,
+    "min_attack": 8,
+    "max_attack": 22
+  },
+  {
+    "id": 19,
+    "name": "Yaxley",
+    "description": "Yaxley是食死徒中的一員，以他在魔法政治和陰謀中的精明才智而聞名。他在黑魔王的部下中擔任高級職位。",
+    "team": "成為食死徒",
+    "health": 87,
+    "min_attack": 7,
+    "max_attack": 20
+  },
+  {
+    "id": 20,
+    "name": "Walden Macnair",
+    "description": "Walden Macnair是食死徒中的死亡魔法師，以他對危險生物的狂熱和殘忍的本性而聞名。他負責執行黑魔王的極端任務。",
+    "team": "成為食死徒",
+    "health": 88,
+    "min_attack": 8,
+    "max_attack": 22
+  }
+]

@@ -1,11 +1,9 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <HelloPotter />
-  <!-- msg="Welcome to Your Vue.js App" -->
+  <HelloPotter msg="Welcome to Hogwarts"/>
 </template>
 
 <script>
-import HelloPotter from './components/HelloWorld.vue'
+import HelloPotter from './components/HelloPotter.vue'
 
 export default {
   name: 'App',
@@ -16,6 +14,9 @@ export default {
 </script>
 
 <style>
+body {
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
