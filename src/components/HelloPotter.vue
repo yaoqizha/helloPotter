@@ -2,6 +2,7 @@
   <div class="wrapper">
     <!-- <h1>{{ msg }}</h1> -->
     <img class ='main-img' :src="mainImg" alt="unsplash img">
+    <div v-if="role.name">{{ role.name }}</div>
     <div class="bottom-text" :class="{ start: start }">
       <div class="text-area">
         <p>{{ story }}"Harry Potter，被選者之一，以他的蛇語能力、守護神（鹿）和逐影术而著稱。作為成為哈利好朋友的領袖，他充滿勇氣和毅力，是黑魔王的堅定敵人。"</p>
@@ -10,13 +11,13 @@
           </li>
         </ul>
       </div>
-      <button class ='start-btn' @click="startGame()">Click to Start</button>
+      <button class='start-btn' @click="startGame()">Click to Start</button>
     </div> 
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import axios from 'axios';
 import charactersData from '../assets/characters.json'
 
@@ -28,6 +29,12 @@ let selectedOption = ref([]);
 let story = ref('');
 let round = 0;
 
+const role = ref({
+  name: '',
+  skill: '',
+  attack: 0,
+  health: 0,
+})
 
 const prefix =[
 {
@@ -51,7 +58,7 @@ const script = [
 async function getStory() {
   const baseUrl = 'https://api.openai.com/v1/chat/completions';
   const MODEL = 'gpt-3.5-turbo';
-  const token = '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';
+  const token = '';
   const response = await axios.post(
       baseUrl,
       {
@@ -82,12 +89,15 @@ const teams = computed(() => {
   return [...new Set(characters.map(character => character.team))];
 })
 selectedOption.value =  options.value.filter(option => option.isSelected === true)
+
 const teamHarry = computed(() => {
-  return characters.filter(character => character.team === '鳳凰會');
+  return characters.filter(character => character.team === '成為鳳凰會');
 })
+
 const teamVoldemort = computed(() => {
-  return characters.filter(character => character.team === '食死徒');
+  return characters.filter(character => character.team === '成為食死徒');
 })
+
 function startGame() {
   start.value = true
   story.value = '請選擇成為食死徒或是鳳凰會'
@@ -109,8 +119,7 @@ function setOptions (arr) {
   arr.forEach((item, index) => {
     temp.push({
       id: index,
-      content: item,
-      isSelected: false
+      content: item
     })
   })
   options.value = temp
@@ -133,7 +142,7 @@ const getRandomNumber = (min, max) => {
 }
 window.getRandomNumber = getRandomNumber;
 //getPictures({ keyword: 'Light vs Dark confrontation' });
-mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1MzYzMDB8MHwxfHNlYXJjaHwxfHxtYWdpYyUyMHdvcmxkfGVufDB8fHx8MTcwMTgxNzg5OHww&ixlib=rb-4.0.3&q=85'
+mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1MzYzMDB8MHwxfHNlYXJjaHwxfHxtYWdpYyUyMHdvcmxkfGVufDB8fHx8MTcwMTgxNzg5OHww&ixlib=rb-4.0.3&q=85';
 
 // const getStory = async () => {
 //   const baseUrl = 'https://www.potterapi.com/v1/sortingHat';
@@ -143,6 +152,32 @@ mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?cr
 //   console.log(response.data);
 // }
 //hogwart, hogwarts express, harry potter, harry potter studio london, harry, dark forest, dark cloud
+
+watch(
+  () => selectedOption,
+  ({ value }) => {
+    if (value === "成為食死徒") {
+      console.log(teamVoldemort.value);
+    }
+    role.value.name = "Harry";
+    // Note: `newValue` will be equal to `oldValue` here
+    // *unless* state.someObject has been replaced
+  },
+  { deep: true }
+)
+
+watch(
+  () => role,
+  ({ value }) => {
+    console.log(value);
+    if (value.name === "Harry") {
+      alert('歡迎，被詛咒的孩子');
+    }
+  },
+  { deep: true }
+)
+
+// 現在我在哈利波特冒險遊戲，我的角色數據是{name:"Harry", attack:"5", health:"5"}，發生了一個事件「在禁忌森林遭遇人馬」，請給我三個事件A,B,C選項，以及對數值的影響，只回傳JSON格式，格式為 [A:{"event"://事件敘述，30字以內,"result"://選擇這個事件發生了什麼事情以及為什麼會對攻擊力和生命值造成影響, "attack"://對攻擊力的影響正3到負3之間,"health"://對生命值的影響正3到負3之間 },...]，除了JSON不要回答其他內容，事件敘述請用中文回答
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
