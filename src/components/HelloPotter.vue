@@ -2,10 +2,10 @@
   <div class="wrapper">
     <!-- <h1>{{ msg }}</h1> -->
     <img class ='main-img' :src="mainImg" alt="unsplash img">
-    <div v-if="role.name">{{ role.name }}</div>
+    <!-- <div v-if="role.name">{{ role.name }}</div> -->
     <div class="bottom-text" :class="{ start: start }">
       <div class="text-area">
-        <p>{{ story }}"Harry Potter，被選者之一，以他的蛇語能力、守護神（鹿）和逐影术而著稱。作為成為哈利好朋友的領袖，他充滿勇氣和毅力，是黑魔王的堅定敵人。"</p>
+        <p>{{ story }}</p>
         <ul><li v-for="option in options" :key = option.id>
           <label for="option.content"><input v-model="selectedOption" :id="option.index" :value="option.content" type="radio">{{ option.content }}</label>
           </li>
@@ -29,7 +29,7 @@ let selectedOption = ref([]);
 let story = ref('');
 let round = 0;
 
-const role = ref({
+let role = ref({
   name: '',
   skill: '',
   attack: 0,
@@ -100,6 +100,7 @@ const teamVoldemort = computed(() => {
 
 function startGame() {
   start.value = true
+  round = 0
   story.value = '請選擇成為食死徒或是鳳凰會'
   setOptions(teams.value)
 }
@@ -113,7 +114,6 @@ if(selectedOption.value.length > 0) {
   }
 }
 
-
 function setOptions (arr) {
   let temp = []
   arr.forEach((item, index) => {
@@ -124,6 +124,12 @@ function setOptions (arr) {
   })
   options.value = temp
 }
+
+function getRandomElements(arr, count) {
+  const shuffled = arr.slice().sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
 window.getStory = getStory
 //getStory()
 // const getPictures = async ({ keyword }) => {
@@ -156,10 +162,25 @@ mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?cr
 watch(
   () => selectedOption,
   ({ value }) => {
-    if (value === "成為食死徒") {
-      console.log(teamVoldemort.value);
+    if(round === 0) {
+      if (value === "成為食死徒") {
+      let arrV = teamVoldemort.value.map(character => character.name)
+      arrV = getRandomElements(arrV, 3)
+      setOptions(arrV)
+      } else {
+        let arrH = teamHarry.value.map(character => character.name)
+        arrH = getRandomElements(arrH, 3)
+        setOptions(arrH)
+      }
+      round++
     }
-    role.value.name = "Harry";
+    if(round === 1) {
+        story.value = '請選擇你的角色'
+        console.log(typeof(value), value)
+        console.log(characters)
+        console.log(characters.find(character => { character.name === value})) 
+        console.log(role.value)
+    }
     // Note: `newValue` will be equal to `oldValue` here
     // *unless* state.someObject has been replaced
   },
@@ -167,14 +188,14 @@ watch(
 )
 
 watch(
-  () => role,
-  ({ value }) => {
-    console.log(value);
-    if (value.name === "Harry") {
-      alert('歡迎，被詛咒的孩子');
-    }
-  },
-  { deep: true }
+  // () => role,
+  // ({ value }) => {
+  //   console.log(value);
+  //   if (value.name === "Harry") {
+  //     alert('歡迎，被詛咒的孩子');
+  //   }
+  // },
+  // { deep: true }
 )
 
 // 現在我在哈利波特冒險遊戲，我的角色數據是{name:"Harry", attack:"5", health:"5"}，發生了一個事件「在禁忌森林遭遇人馬」，請給我三個事件A,B,C選項，以及對數值的影響，只回傳JSON格式，格式為 [A:{"event"://事件敘述，30字以內,"result"://選擇這個事件發生了什麼事情以及為什麼會對攻擊力和生命值造成影響, "attack"://對攻擊力的影響正3到負3之間,"health"://對生命值的影響正3到負3之間 },...]，除了JSON不要回答其他內容，事件敘述請用中文回答
