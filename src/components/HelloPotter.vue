@@ -1,17 +1,19 @@
 <template>
   <div class="wrapper">
     <!-- <h1>{{ msg }}</h1> -->
-    <img class ='main-img' :src="mainImg" alt="unsplash img">
+    <img class="main-img" :src="mainImg" alt="unsplash img">
     <!-- <div v-if="role.name">{{ role.name }}</div> -->
     <div class="bottom-text" :class="{ start: start }">
       <div class="text-area">
+        <p v-if="round > 1">{{ role.health }} {{ role.attack }}</p>
         <p>{{ story }}</p>
-        <ul><li v-for="option in options" :key = option.id>
-          <label for="option.content"><input v-model="selectedOption" :id="option.index" :value="option.content" type="radio">{{ option.content }}</label>
+        <ul><li v-for="option in options" :key="option.id">
+          <label :for="option.content"><input v-model="selectedOption" :id="option.index" :value="option.content" type="radio">{{ option.content }}</label>
           </li>
         </ul>
       </div>
       <button class='start-btn' @click="startGame()">Click to Start</button>
+      <button v-if="round" class='round-btn' @click="nextRound">Next Round</button>
     </div> 
   </div>
 </template>
@@ -24,37 +26,69 @@ import charactersData from '../assets/characters.json'
 const characters = charactersData;
 const start = ref(false)
 const mainImg = ref('');
+const rawOption = ref([]);
 let options = ref([]);
 let selectedOption = ref([]);
 let story = ref('');
-let round = 0;
+let round = ref(0);
 
-let role = ref({
+const role = ref({
   name: '',
   skill: '',
   attack: 0,
   health: 0,
 })
 
-const prefix =[
-{
-  role:'system',
-  content:'現在對話的背景是哈利波特的魔法世界，我在進行巫師對決，我的角色設定皆為霍格華滋陣營，你是輔助系統幫助我完成故事與對決'
-},{
-  role:'user',
-  content: '以下是我的角色資料：{ "name": "哈利波特", "skill": "魔杖技巧", "attack": 8, "health": 9 }'
-}
-]
-const script = [
-  {
-      role: 'user',
-      content: '我現在是進行巫師對決的玩家，請給我三個霍格華滋陣營的角色讓我選擇，請用JSON格式回答，範例為 { "name": // 角色名稱，小說中出現過的, "skill": // 角色技能, "attack": // 攻擊力，數值為5-10，請根據角色特性給予, "health": // 生命值，請根據角色特性給予 }，我要直接做JSON.parse，請不要給我不能用的字元'
-  },
-  // {
-  //     role: 'user',
-  //     content: '我遇到了一個食死徒，遭遇一場戰鬥，簡單敘述戰鬥內容跟我角色的資料變化，角色的JSON資料請放在敘述結束後的 DATA: 後方'
-  // }
+mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1MzYzMDB8MHwxfHNlYXJjaHwxfHxtYWdpYyUyMHdvcmxkfGVufDB8fHx8MTcwMTgxNzg5OHww&ixlib=rb-4.0.3&q=85';
+
+const events = [
+  '',
+  '',
+  '在禁忌森林裡面遭遇半人馬群包圍',
+  '',
+  '遭遇了一場激戰後，前往海格的小屋休息，這時候海格拿出一杯液體',
+  '',
+  '一年一度魔法世界的魁地奇比賽到了，賽場上的你看了一眼觀眾群後施展魔法',
+  '',
+  '今早醒來發現自己魔杖被壓斷了，前往Ollivanders魔杖店，挑選適合的魔杖',
+  '',
+  '在斜角巷撿到一顆水晶球，水晶球裡看到一個人影',
+  '',
+  '遇到一位強大的對手，還沒反應過來就被施打索命咒',
+  '',
+  '在前往霍格華茲的列車上撿到隱形斗篷，披上它後聽到了關於魔法部的重大消息',
+  '',
+  '突然被通知違反巫師法，被帶往魔法部巫師法庭',
+  '',
+  '在弗倫德和喬治的愚人產品商店開幕，好奇前往購買商品',
+  '',
+  '穿巷口鑰，瞬間被傳送到一個陌生的地方',
+  '',
+  '遠方看到一群模糊的人影，發現是催狂魔群',
+  '',
+  '突然一輛騎士公車停在你眼前，乘務員說可以將陷入困境的你帶去任何地方',
+  '',
+  '在霍格華茲的教授家裡，發現了一顆魔法樹',
+  '',
+  '走在霍格華茲走廊，有求必應室突然出現在你面前',
+  '',
+  '在郊區冰冷湖面下發現葛來芬多寶劍',
+  '',
+  '在有求必應室看到雷文克勞皇冠',
+  '',
+  '在月圓之夜遇到狼人在對滿月嚎叫',
+  '',
+  '將停在院子裡的飛天魔法汽車開走'
 ];
+
+const getPrompt = () => {
+  return `我在玩哈利波特冒險遊戲，我的角色數據是`
+    + `{name:"${role.value.name}",description:"${role.value.description}", attack:"${role.value.attack}", health:"${role.value.health}"}`
+    + `，發生了一個事件「${events[round.value]}」，請提出三個對於事件產生的反應，以及對角色數據的影響，只回傳JSON格式，`
+    + `格式為 [{"event"://敘述反應是什麼，30字以內,"result"://選擇這個事件發生了什麼事情以及為什麼會對攻擊力和生命值造成影響, "attack"://對攻擊力的影響正10到負10之間,"health"://對生命值的影響正20到負20之間 },...]`
+    + `，除了JSON不要回答其他內容，事件敘述請用中文回答`;
+}
+
 async function getStory() {
   const baseUrl = 'https://api.openai.com/v1/chat/completions';
   const MODEL = 'gpt-3.5-turbo';
@@ -63,18 +97,16 @@ async function getStory() {
       baseUrl,
       {
         messages: [
-        ...prefix,
-        script[round],
+          {
+            role:'user',
+            content: getPrompt(),
+          }
         ],
-        //prompt: prompt,
         model: MODEL,
-        max_tokens: 150,
-        temperature: 0.9,
+        max_tokens: 720,
+        temperature: 0.7,
         top_p: 1,
         n: 1,
-        //stream: false,
-        // logprobs: null,
-        // stop: ['\n', "DATA:"],
       },
       {
         headers: {
@@ -83,12 +115,14 @@ async function getStory() {
         }
       }
     ); 
-  story.value = response?.data?.choices[0]?.message.content
+    const array = JSON.parse(response?.data?.choices[0]?.message.content);
+    rawOption.value = array;
+    options.value = array.map(({ event }, index) => ({ content: event, index }));
 }
 const teams = computed(() => {
   return [...new Set(characters.map(character => character.team))];
 })
-selectedOption.value =  options.value.filter(option => option.isSelected === true)
+selectedOption.value = options.value.filter(option => option.isSelected === true)
 
 const teamHarry = computed(() => {
   return characters.filter(character => character.team === '成為鳳凰會');
@@ -98,20 +132,15 @@ const teamVoldemort = computed(() => {
   return characters.filter(character => character.team === '成為食死徒');
 })
 
+const nextRound = () => {
+  round.value = round.value + 1;
+}
+
 function startGame() {
   start.value = true
-  round = 0
+  round.value = 0
   story.value = '請選擇成為食死徒或是鳳凰會'
   setOptions(teams.value)
-}
-if(selectedOption.value.length > 0) {
-  if(selectedOption.value[0] === '鳳凰會') {
-    story.value = '請選擇你的角色'
-    setOptions(teamHarry.value.map(character => character.name))
-  } else if(selectedOption.value[0] === '食死徒') {
-    story.value = '請選擇你的角色'
-    setOptions(teamVoldemort.value.map(character => character.name))
-  }
 }
 
 function setOptions (arr) {
@@ -130,39 +159,40 @@ function getRandomElements(arr, count) {
   return shuffled.slice(0, count);
 }
 
-window.getStory = getStory
-//getStory()
-// const getPictures = async ({ keyword }) => {
-//   const baseUrl = 'https://api.unsplash.com/search/photos';
-//   const response = await axios.get(
-//     `${baseUrl}?query=${keyword}&client_id=lpzI5L4f2klqot43me98raxpI6FVeWHCbkSQuo9LM9Q`
-//   );
+const getRandomEvenNumber = (min, max) => {
+  let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (randomNumber % 2 !== 0) {
+    randomNumber += 1; 
+  }
+  return randomNumber;
+};
 
-//   background.value = response.data.results[getRandomNumber(10)].urls.regular;
-//   console.log(background.value)
-  
-// }
+console.log(getRandomEvenNumber(2, 20));
+
+
+//getStory()
+const getPictures = async ({ keyword }) => {
+  const baseUrl = 'https://api.unsplash.com/search/photos';
+  const response = await axios.get(
+    `${baseUrl}?query=${keyword}&client_id=lpzI5L4f2klqot43me98raxpI6FVeWHCbkSQuo9LM9Q`
+  );
+  mainImg.value = response.data.results[getRandomNumber(10)].urls.regular;
+}
 
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 window.getRandomNumber = getRandomNumber;
-//getPictures({ keyword: 'Light vs Dark confrontation' });
-mainImg.value = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1MzYzMDB8MHwxfHNlYXJjaHwxfHxtYWdpYyUyMHdvcmxkfGVufDB8fHx8MTcwMTgxNzg5OHww&ixlib=rb-4.0.3&q=85';
 
-// const getStory = async () => {
-//   const baseUrl = 'https://www.potterapi.com/v1/sortingHat';
-//   const response = await axios.get(
-//     `${baseUrl}`
-//   );
-//   console.log(response.data);
-// }
 //hogwart, hogwarts express, harry potter, harry potter studio london, harry, dark forest, dark cloud
 
 watch(
   () => selectedOption,
   ({ value }) => {
-    if(round === 0) {
+    if (!value) return;
+
+    if(round.value === 0) {
+      getPictures({ keyword: 'Light vs Dark confrontation' });
       if (value === "成為食死徒") {
       let arrV = teamVoldemort.value.map(character => character.name)
       arrV = getRandomElements(arrV, 3)
@@ -172,14 +202,25 @@ watch(
         arrH = getRandomElements(arrH, 3)
         setOptions(arrH)
       }
-      round++
+      round.value++
     }
-    if(round === 1) {
-        story.value = '請選擇你的角色'
-        console.log(typeof(value), value)
-        console.log(characters)
-        console.log(characters.find(character => { character.name === value})) 
-        console.log(role.value)
+
+    if(round.value === 1) {
+        story.value = '請選擇你的角色';
+        getPictures({ keyword: 'harry potter' })
+        const theCharacter = charactersData
+          .find(({ name }) => name === value);
+
+        if (theCharacter) {
+          console.log(theCharacter);
+          story.value = theCharacter?.description ?? '';
+          role.value = {
+            name: theCharacter?.name,
+            description: theCharacter?.description,
+            health: theCharacter?.health,
+            attack: theCharacter?.min_attack,
+          };
+        }
     }
     // Note: `newValue` will be equal to `oldValue` here
     // *unless* state.someObject has been replaced
@@ -188,15 +229,49 @@ watch(
 )
 
 watch(
-  // () => role,
-  // ({ value }) => {
-  //   console.log(value);
-  //   if (value.name === "Harry") {
-  //     alert('歡迎，被詛咒的孩子');
-  //   }
-  // },
-  // { deep: true }
+  () => round,
+  ({ value }) => {
+    console.log('round', value);
+    if (value > 1) {
+      if (value % 2) {
+        // 輪空
+        getPictures({ keyword: 'hogwarts express' })
+        const answer = rawOption.value.find(({ event }) => event === selectedOption.value);
+        story.value = answer.result;
+        role.value.health += +answer.health;
+        role.value.attack += +answer.attack;
+        options.value = [];
+      } else {
+        // 產生
+        if(role.value.health <= 0) {
+          story.value = '你已經死亡';
+          options.value = [];
+          return;
+        } else if (role.value.attack <= 10) {
+          story.value = '魔法能力過於低弱，回家吧';
+          options.value = [];
+          return;
+        } else {
+          getPictures({ keyword: 'harry potter studio london' })
+          story.value = events[round.value];
+          getStory();
+        }
+      }
+    }
+  },
+  { deep: true }
 )
+
+// watch(
+//   () => role,
+//   ({ value }) => {
+//     console.log(value);
+//     if (value.name === "Harry") {
+//       alert('歡迎，被詛咒的孩子');
+//     }
+//   },
+//   { deep: true }
+// )
 
 // 現在我在哈利波特冒險遊戲，我的角色數據是{name:"Harry", attack:"5", health:"5"}，發生了一個事件「在禁忌森林遭遇人馬」，請給我三個事件A,B,C選項，以及對數值的影響，只回傳JSON格式，格式為 [A:{"event"://事件敘述，30字以內,"result"://選擇這個事件發生了什麼事情以及為什麼會對攻擊力和生命值造成影響, "attack"://對攻擊力的影響正3到負3之間,"health"://對生命值的影響正3到負3之間 },...]，除了JSON不要回答其他內容，事件敘述請用中文回答
 </script>
@@ -236,6 +311,17 @@ li:not(:last-child) {
 .text-area {
   display: none;
 }
+.start-btn, .round-btn {
+  background-color: #000;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
 .start-btn {
   background-color: #000;
   border: none;
