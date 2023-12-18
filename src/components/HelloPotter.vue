@@ -117,7 +117,7 @@ const getPrompt = () => {
 async function getStory() {
   const baseUrl = "https://api.openai.com/v1/chat/completions";
   const MODEL = "gpt-3.5-turbo";
-  const token = "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";
+  const token = "";
   options.value = [];
   const response = await axios.post(
     baseUrl,
