@@ -1,8 +1,6 @@
 <template>
   <div class="wrapper">
-    <!-- <h1>{{ msg }}</h1> -->
     <img class="main-img" :src="mainImg" alt="unsplash img" />
-    <!-- <div v-if="role.name">{{ role.name }}</div> -->
     <div class="bottom-text" :class="{ start: start }">
       <div class="text-area">
         <p v-if="round > 1">role:{{role.name}} health:{{ role.health }} attack:{{ role.attack }}</p>
@@ -34,7 +32,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, watch } from "vue";
 import axios from "axios";
@@ -244,14 +241,11 @@ const getRandomNumber = (min, max) => {
 };
 window.getRandomNumber = getRandomNumber;
 
-//hogwart, hogwarts express, harry potter, harry potter studio london, harry, dark forest, dark cloud
-
 watch(
   () => selectedOption,
   ({ value }) => {
     if (!value) return;
     if (round.value === 0) {
-      //getPictures({ keyword: "Light vs Dark confrontation" });
       if (value === "成為食死徒") {
         let arrV = teamVoldemort.value.map((character) => character.name);
         arrV = getRandomElements(arrV, 3);
@@ -266,7 +260,6 @@ watch(
 
     if (round.value === 1) {
       story.value = "請選擇你的角色";
-      //getPictures({ keyword: "harry potter" });
       const theCharacter = charactersData.find(({ name }) => name === value);
 
       if (theCharacter) {
@@ -289,7 +282,6 @@ watch(
   ({ value }) => {
     if (value > 1) {
       if (value % 2) {
-        // 輪空
         getPictures({ keyword: "hogwarts express" });
         const answer = rawOption.value.find(
           ({ event }) => event === selectedOption.value
@@ -299,7 +291,6 @@ watch(
         role.value.attack += +answer.attack;
         options.value = [];
       } else {
-        // 產生
         if (role.value.health <= 0) {
           story.value = "你已經死亡";
           options.value = [];
@@ -327,28 +318,13 @@ watch(
   },
   { deep: true }
 );
-
-// watch(
-//   () => role,
-//   ({ value }) => {
-//     console.log(value);
-//     if (value.name === "Harry") {
-//       alert('歡迎，被詛咒的孩子');
-//     }
-//   },
-//   { deep: true }
-// )
-
-// 現在我在哈利波特冒險遊戲，我的角色數據是{name:"Harry", attack:"5", health:"5"}，發生了一個事件「在禁忌森林遭遇人馬」，請給我三個事件A,B,C選項，以及對數值的影響，只回傳JSON格式，格式為 [A:{"event"://事件敘述，30字以內,"result"://選擇這個事件發生了什麼事情以及為什麼會對攻擊力和生命值造成影響, "attack"://對攻擊力的影響正3到負3之間,"health"://對生命值的影響正3到負3之間 },...]，除了JSON不要回答其他內容，事件敘述請用中文回答
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
+<style>
+  ul {
+list-style-type: none;
+padding: 0;
+margin: 0;
+width: 100%;
 }
 li {
   display: inline-block;
